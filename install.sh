@@ -8,7 +8,7 @@ TIMEOUT="15"
 
 
 while getopts d:i:s:h:f:t: o
-do  
+do
     case "$o" in
         d)  SPLUNK="$OPTARG";;
         i)  IKEY="$OPTARG";;
@@ -115,27 +115,13 @@ echo "Installing Duo integration to $SPLUNK..."
 
 
 # Figure out what version to patch
-if grep -q 'VERSION=4' "$SPLUNK/etc/splunk.version" ; then
-    if [ $UPGRADE -eq 1 ] ; then
-        echo 'Duo is already installed, and no upgrade exists for splunk version 4.'
-        echo 'Exiting.'
-        exit 0
-    fi
-	echo "Using patch for version 4..."
-	PATCH="account.py.4.diff"
-fi
 
-if grep -q 'VERSION=5' "$SPLUNK/etc/splunk.version" ; then
-	echo "Using patch for version 5..."
-	PATCH="account.py.5.diff"
-fi
-
-if grep -q 'VERSION=6' "$SPLUNK/etc/splunk.version" ; then
+if grep -qE 'VERSION=6\.[12]' "$SPLUNK/etc/splunk.version" ; then
 	echo "Using patch for version 6..."
 	PATCH="account.py.6.diff"
 fi
 
-if grep -q 'VERSION=6.3' "$SPLUNK/etc/splunk.version" ; then
+if grep -qE 'VERSION=6\.3' "$SPLUNK/etc/splunk.version" ; then
 	echo "Using patch for version 6.3..."
 	PATCH="account.py.63.diff"
 	PATCH2="decorators.py.63.diff"
